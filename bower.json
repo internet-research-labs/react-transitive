@@ -1,0 +1,19 @@
+{
+  "name": "Loading",
+  "version": "0.0.0",
+  "authors": [
+    "Matt Owen <not.mattowen@gmail.com>"
+  ],
+  "license": "UNLICENSE",
+  "homepage": "http://razorbla.de/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.14.3"
+  }
+}
