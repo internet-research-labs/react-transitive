@@ -1,42 +1,43 @@
 var gulp = require('gulp');
+var gutil = require("gulp-util");
 var connect = require('gulp-connect');
 var browserify = require('gulp-browserify');
 var watch = require('gulp-watch');
-var batch = require('gulp-batch');
 var react = require('gulp-react');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
+var webpackStream = require('webpack-stream');
+var webpackConfig = require("./webpack.config.js");
+var plumber = require('gulp-plumber');
+var path = require('path');
 
-gulp.task('jsx', function() {
-  console.log("** jsx");
+gulp.task('jsx-components', function () {
   return gulp.src('src/components/**.jsx')
-             .pipe(react())
-             .pipe(gulp.dest('./src/components/'));
+              .pipe(plumber())
+              .pipe(react())
+              .pipe(gulp.dest('src/components'));
 });
 
-gulp.task('scripts', function() {
-  console.log("** scripts");
-  return gulp.src('src/components/**.js')
-             .pipe(babel())
-             .pipe(uglify())
-             .pipe(gulp.dest('./app/components/'));
-});
-
-gulp.task('connect', function() {
-  connect.server({
-    root: 'app',
-    livereload: true
-  });
+gulp.task('webpack-stream', function () {
+  return gulp.src('src/**.js')
+             .pipe(webpackStream(webpackConfig))
+             .pipe(gulp.dest('app/'))
+             .pipe(connect.reload());
 });
 
 gulp.task('watch', function () {
-  watch('src/**/*.js', function () {
-    gulp.start('scripts');
-  });
-  watch('src/**/*.jsx', function () {
-    gulp.start('jsx');
+  gulp.watch(
+    ['src/**/*.jsx', 'src/**/*.js'],
+    ['jsx-components', 'webpack-stream']
+  );
+});
+
+gulp.task('connect', function () {
+  connect.server({
+    root: 'app',
+    port: 8000,
+    livereload: { port: 8001 },
   });
 });
- 
-// gulp.task('default', ['stream', 'connect']);
+
 gulp.task('default', ['watch', 'connect']);
