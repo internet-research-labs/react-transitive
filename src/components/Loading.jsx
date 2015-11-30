@@ -3,6 +3,9 @@ var Loading = React.createClass({
     return (
       <div>
         <div>Yea yea yea</div>
+        <div>Yea yea yea</div>
+        <div>Yea yea yea</div>
+        <div>Yea yea yea</div>
         <canvas></canvas>
       </div>
     );
